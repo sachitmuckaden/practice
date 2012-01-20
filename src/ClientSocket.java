@@ -66,7 +66,7 @@ public class ClientSocket {
                 	line=buf.readLine();
                 	os.writeBytes(line);
                 }
-                os.writeBytes("QUIT\n");
+                os.writeBytes("QUIT");
             	/*String responseLine;
                while ((responseLine = is.readLine()) != null) {
                     System.out.println("Server: " + responseLine);
