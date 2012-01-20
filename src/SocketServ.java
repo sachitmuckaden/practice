@@ -22,6 +22,8 @@ public class SocketServ {
              line = is.readLine();
              System.out.println(line); 
            }while (!line.equals("end"));
+           is.close();
+           os.close();
         }   
     catch (IOException e) {
            System.out.println(e);

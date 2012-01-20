@@ -62,11 +62,10 @@ public class ClientSocket {
             try {
             	String line=null;
             	os.writeBytes("HELO\n");    
-                do{
+                while(!line.equals("end")){
                 	line=buf.readLine();
                 	os.writeBytes(line);
-                	os.flush();
-                  }while (!line.equals("end"));
+                }
                 os.writeBytes("QUIT\n");
             	/*String responseLine;
                while ((responseLine = is.readLine()) != null) {
