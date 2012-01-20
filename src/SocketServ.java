@@ -18,10 +18,12 @@ public class SocketServ {
            clientSocket = myServer.accept();
            is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
            os = new PrintStream(clientSocket.getOutputStream());
-           while (true) {
+           do {
              line = is.readLine();
              System.out.println(line); 
-           }
+           }while (!line.equals("end"));
+           is.close();
+           os.close();
         }   
     catch (IOException e) {
            System.out.println(e);
