@@ -18,7 +18,7 @@ class Throughput
 	
 	public static void uplinkmeasurement() throws UnknownHostException, IOException
 	{
-		String serveraddress="ruggles.gtnoise.net";
+		String serveraddress="128.61.119.87";
 		SocketAddress serversocket = new InetSocketAddress(serveraddress,9901);
 		Socket uplinkclient=new Socket();
 		uplinkclient.connect(serversocket);
@@ -76,15 +76,23 @@ class Throughput
 	
 	public static void downlinkmeasurement() throws IOException
 	{
-		String serveraddress="ruggles.gtnoise.net";
-		SocketAddress serversocket = new InetSocketAddress(serveraddress,9701);
+		String serveraddress="128.61.119.87";
+		SocketAddress serversocket = new InetSocketAddress(serveraddress,9704);
 		Socket downlinkclient=new Socket();
 		downlinkclient.connect(serversocket);
 		
 		DataInputStream in = new DataInputStream(downlinkclient.getInputStream());
 		DataOutputStream out = new DataOutputStream(downlinkclient.getOutputStream());
 		String initiate="start";
-		out.writeChars(initiate);
+		
+		out.writeBytes(initiate);
+		out.flush();
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		int messagebytes=0;
 		int totalbytes=0;
 		int count=0;
@@ -95,14 +103,19 @@ class Throughput
 		{
 			messagebytes=in.read(buffer, 0, 12000);
 			count++;
-			if(messagebytes==0)
+			if(messagebytes<=0)
 				break;
+			System.out.println(messagebytes);
 			totalbytes+=messagebytes;
 			end=System.currentTimeMillis();
 		}while(true);
 		
-		System.out.println(totalbytes*8/(int)(end-start));
+		if(end-start>0) System.out.println(totalbytes*8/(int)(end-start)+ " kbps");
+		out.close();
+		in.close();
+		downlinkclient.close();
 	}
+	
 	
 	public static void main(String[] args) throws UnknownHostException, IOException
 	{
