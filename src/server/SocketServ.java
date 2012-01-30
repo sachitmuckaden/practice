@@ -15,19 +15,21 @@ public class SocketServ {
            System.out.println(e);
         }   
         try {
-           clientSocket = myServer.accept();
-           is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-           os = new PrintStream(clientSocket.getOutputStream());
-           
-           char[] receivemessage=new char[30000];
-           while((is.read(receivemessage))>-1){
-                       
-           }
-           //os.write(receivemessage.length);
-           //os.flush();
-           is.close();
-           os.close();
-           clientSocket.close();
+        	while(true){
+	           clientSocket = myServer.accept();
+	           is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	           os = new PrintStream(clientSocket.getOutputStream());
+	           
+	           char[] receivemessage=new char[30000];
+	           while((is.read(receivemessage))>-1){
+	        	   System.out.println("GOT IT");
+	           }
+	           //os.write(receivemessage.length);
+	           //os.flush();
+	           is.close();
+	           os.close();
+	           clientSocket.close();
+        	}
         }   
     catch (IOException e) {
            System.out.println(e);

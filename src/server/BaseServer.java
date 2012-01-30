@@ -13,7 +13,7 @@ class BaseServer{
 	public static ServerSocket server;
 	
 public static void main(String[] args)throws IOException{
-		int port=9701;
+		int port=9703;
 		try{
 			
 			server = new ServerSocket(port);
@@ -26,14 +26,14 @@ public static void main(String[] args)throws IOException{
 			}
 		    System.out.println("Could not listen on port " + port);
 		    
-			return;
-		}*/
+			return;*/
+		}
 		while(true){
 			
 		    try{
 		    	//server.accept returns a client connection
 		    	
-		    	Serverdownlink c = new Serverdownlink();
+		    	Serverdownlink c = new Serverdownlink(port);
 	    		c.setSocket(server.accept());
 	    		c.start();
 	    		
@@ -46,6 +46,6 @@ public static void main(String[] args)throws IOException{
 		}
 	}
 }
-}
+
 
 

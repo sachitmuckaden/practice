@@ -5,13 +5,16 @@ import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.Random;
 public class Serverdownlink extends Thread{
-	
-	
+
+
 	public Socket client;
+	public int port;
 	public void setSocket(Socket client){
 		this.client = client;
 	}
-	
+	Serverdownlink(int port){
+		this.port=port;
+	}
 	public static String generateRandom()
 	{
 		Random number=new Random();
@@ -22,14 +25,13 @@ public class Serverdownlink extends Thread{
 		}
 		return message.toString();
 	}
-	
 
 	public void run(){
-	
+
 		try{
 			//client.setSoTimeout(Definition.RECV_TIMEOUT);
 
-			client=new Socket();
+			//client=new Socket();
 			InputStreamReader in = new InputStreamReader(client.getInputStream());
 			OutputStreamWriter out = new OutputStreamWriter(client.getOutputStream());
 			char buffer[] = new char[20480];
@@ -42,25 +44,29 @@ public class Serverdownlink extends Thread{
 			//System.out.println("prefix:" + prefix);
 			//String prefix = "<iPhone><device_id><run_id>";
 			//ystem.out.println("Server received prefix ok, start");
+			System.out.println("initiate: " + initiate.equals("start"));
+			if (initiate.equals("start")){	
+				long start = System.currentTimeMillis();
+				long end = System.currentTimeMillis();
 
-		if (initiate.equals("start")){	
-			long start = System.currentTimeMillis();
-			long end = System.currentTimeMillis();
+				int batch = 0;
 
-			int batch = 0;
+				while(end - start < 20000){
 
-			while(end - start < 20000){
-
-				//out.write();
-				out.write(generateRandom()); //2600 larger than MTU
-				out.flush();
-				batch++;
-				if(batch % 50 == 0){
-					end = System.currentTimeMillis();
+					//out.write();
+					out.write(generateRandom()); //2600 larger than MTU
+					System.out.println("downsend");
+					out.flush();
+					batch++;
+					if(batch % 50 == 0){
+						end = System.currentTimeMillis();
+					}
 				}
-			}
 
-			
+
+			}
+			else{
+				System.out.println("confused");
 			}
 			in.close();
 			out.close();
@@ -70,8 +76,10 @@ public class Serverdownlink extends Thread{
 
 		} catch (IOException e) {
 			e.printStackTrace();
+
+
 		}
-		}
-		
 	}
+
+}
 
