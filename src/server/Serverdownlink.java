@@ -3,14 +3,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 public class Serverdownlink extends Thread{
 
 
 	public Socket client;
 	public int port;
+	public String ip_address;
 	public void setSocket(Socket client){
 		this.client = client;
+		ip_address = client.getInetAddress().toString().substring(1) + ":" + client.getPort();
 	}
 	Serverdownlink(int port){
 		this.port=port;
@@ -27,7 +32,7 @@ public class Serverdownlink extends Thread{
 	}
 
 	public void run(){
-
+		
 		try{
 			//client.setSoTimeout(Definition.RECV_TIMEOUT);
 
@@ -35,38 +40,37 @@ public class Serverdownlink extends Thread{
 			InputStreamReader in = new InputStreamReader(client.getInputStream());
 			OutputStreamWriter out = new OutputStreamWriter(client.getOutputStream());
 			char buffer[] = new char[20480];
-
+			
 			StringBuilder prefix_sb = new StringBuilder("");
 			int bytes_read = in.read(buffer);
 			StringBuilder startmessage = new StringBuilder("");
 			startmessage.append(buffer, 0, bytes_read);
 			String initiate = startmessage.toString();
-			//System.out.println("prefix:" + prefix);
-			//String prefix = "<iPhone><device_id><run_id>";
-			//ystem.out.println("Server received prefix ok, start");
-			System.out.println("initiate: " + initiate.equals("start"));
+			
+			
 			if (initiate.equals("start")){	
+				print("starting downlink:");
 				long start = System.currentTimeMillis();
 				long end = System.currentTimeMillis();
-
+				int packets = 0;
 				int batch = 0;
 
 				while(end - start < 20000){
 
-					//out.write();
-					out.write(generateRandom()); //2600 larger than MTU
-					System.out.println("downsend");
+					
+					out.write(generateRandom());
+					packets++;
 					out.flush();
 					batch++;
 					if(batch % 50 == 0){
 						end = System.currentTimeMillis();
 					}
 				}
-
+				print("ended, packets sent: " + packets);
 
 			}
 			else{
-				System.out.println("confused");
+				print("initiate failed! message: " + initiate);
 			}
 			in.close();
 			out.close();
@@ -76,9 +80,17 @@ public class Serverdownlink extends Thread{
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			print("error");
 
 
 		}
+	}
+	
+	public void print(String s){
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		
+		System.out.println(dateFormat.format(date) + "\t" + this.ip_address + "\t:\t" + s);
 	}
 
 }

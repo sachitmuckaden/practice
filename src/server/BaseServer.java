@@ -13,7 +13,7 @@ class BaseServer{
 	public static ServerSocket server;
 	
 public static void main(String[] args)throws IOException{
-		int port=9703;
+		int port=9704;
 		try{
 			
 			server = new ServerSocket(port);
