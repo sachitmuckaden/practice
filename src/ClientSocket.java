@@ -60,11 +60,12 @@ public class ClientSocket {
         }
         if (smtpSocket != null && os != null && is != null) {
             try {
-            	String line=null;
+            	String line="";
             	os.writeBytes("HELO\n");    
                 while(!line.equals("end")){
                 	line=buf.readLine();
                 	os.writeBytes(line);
+                	os.writeBytes("\n");
                 }
                 os.writeBytes("QUIT");
             	/*String responseLine;
