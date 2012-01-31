@@ -10,13 +10,15 @@ import java.net.ServerSocket;
 class BaseServer{
 	
 	
-	public static ServerSocket server;
-	
+	public static ServerSocket uplinkserver;
+	public static ServerSocket downlinkserver;
 public static void main(String[] args)throws IOException{
-		int port=9704;
+		int uplinkport=9901;
+		int downlinkport=9701;
 		try{
 			
-			server = new ServerSocket(port);
+			uplinkserver = new ServerSocket(uplinkport);
+			downlinkserver = new ServerSocket(downlinkport);
 		} catch (IOException e) {
 			e.printStackTrace();
 			/*try {
@@ -32,15 +34,29 @@ public static void main(String[] args)throws IOException{
 			
 		    try{
 		    	//server.accept returns a client connection
-		    	
-		    	Serverdownlink c = new Serverdownlink(port);
-	    		c.setSocket(server.accept());
-	    		c.start();
-	    		
-		    }
-	    	
+		    		
+				    	DownlinkServer c = new DownlinkServer(downlinkport);
+			    		c.setSocket(downlinkserver.accept());
+			    		c.start();
+		    		
+			    	
+			    		
+		    	}
+		    
 		    catch (IOException e1) {
-		    	System.out.println("Server failed: port <" + port + ">");
+		    	System.out.println("Server failed: port <" + downlinkport + ">");
+		    	return;
+		    }
+		    
+		    try{
+		    	
+		    	UplinkServer s = new UplinkServer(uplinkport);
+	    		s.setSocket(uplinkserver.accept());
+	    		s.start();
+		
+		    }
+		    catch (IOException e2) {
+		    	System.out.println("Server failed: port <" + uplinkport + ">");
 		    	return;
 		    }
 		}
