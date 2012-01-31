@@ -40,37 +40,42 @@ public class Serverdownlink extends Thread{
 			InputStreamReader in = new InputStreamReader(client.getInputStream());
 			OutputStreamWriter out = new OutputStreamWriter(client.getOutputStream());
 			char buffer[] = new char[20480];
-			
-			StringBuilder prefix_sb = new StringBuilder("");
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			int bytes_read = in.read(buffer);
+			
 			StringBuilder startmessage = new StringBuilder("");
 			startmessage.append(buffer, 0, bytes_read);
 			String initiate = startmessage.toString();
 			
 			
 			if (initiate.equals("start")){	
-				print("starting downlink:");
+				print("starting downlink");
 				long start = System.currentTimeMillis();
 				long end = System.currentTimeMillis();
-				int packets = 0;
+				
 				int batch = 0;
 
 				while(end - start < 20000){
 
 					
 					out.write(generateRandom());
-					packets++;
+					
 					out.flush();
 					batch++;
 					if(batch % 50 == 0){
 						end = System.currentTimeMillis();
 					}
 				}
-				print("ended, packets sent: " + packets);
+				print("ended, packets sent: " + batch);
 
 			}
 			else{
-				print("initiate failed! message: " + initiate);
+				print("initiate failed! message: " + initiate + "(" + bytes_read +")");
 			}
 			in.close();
 			out.close();
