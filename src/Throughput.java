@@ -18,7 +18,7 @@ class Throughput
 	
 	public static void uplinkmeasurement() throws UnknownHostException, IOException
 	{
-		String serveraddress="128.61.119.87";
+		String serveraddress="ruggles.gtnoise.net";
 		SocketAddress serversocket = new InetSocketAddress(serveraddress,9901);
 		Socket uplinkclient=new Socket();
 		uplinkclient.connect(serversocket);
@@ -32,7 +32,7 @@ class Throughput
 		int throughput=0;
 		int tensecthroughput=0;
 		long start = System.currentTimeMillis();
-		System.out.println(start);
+		//System.out.println(start);
 		long end = System.currentTimeMillis();
 		long intermediate = System.currentTimeMillis();
 		int count=0;
@@ -50,7 +50,7 @@ class Throughput
 			}
 				
 			count++;
-		}while(end-start<=20000);
+		}while(end-start<=25000);
 		throughput=count*(message.length+(54*3))/(int)(end-start)*8;
 		tensecthroughput = tenseccount*message.length/(int)(end-intermediate)*8;
 		try{
@@ -62,9 +62,10 @@ class Throughput
 		}
 		//int length=0;
 		//length=in.read();
-		System.out.println("No of packets sent: "+count);
-		System.out.println(throughput + "kbps");
-		System.out.println(message.length);
+		//System.out.println("No of packets sent: "+count);
+		System.out.println("Overall throughput: "+throughput + "kbps");
+		System.out.println("Last 10 seconds throughput: "+tensecthroughput + "kbps");
+		//System.out.println(message.length);
 		
 		//throughput=count*length/(int)(end-start)*8;
 		//System.out.println(throughput + "kbps");
@@ -76,8 +77,8 @@ class Throughput
 	
 	public static void downlinkmeasurement() throws IOException
 	{
-		String serveraddress="128.61.119.87";
-		SocketAddress serversocket = new InetSocketAddress(serveraddress,9704);
+		String serveraddress="ruggles.gtnoise.net";
+		SocketAddress serversocket = new InetSocketAddress(serveraddress,9708);
 		Socket downlinkclient=new Socket();
 		downlinkclient.connect(serversocket);
 		
@@ -105,7 +106,7 @@ class Throughput
 			count++;
 			if(messagebytes<=0)
 				break;
-			System.out.println(messagebytes);
+			//System.out.println(messagebytes);
 			totalbytes+=messagebytes;
 			end=System.currentTimeMillis();
 		}while(true);
@@ -119,7 +120,9 @@ class Throughput
 	
 	public static void main(String[] args) throws UnknownHostException, IOException
 	{
+		downlinkmeasurement();
 		uplinkmeasurement();
+		
 	}
 
 }

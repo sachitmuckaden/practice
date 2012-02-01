@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+
 import java.net.ServerSocket;
 
 //import servers.CommandWorker;
@@ -13,8 +14,8 @@ class BaseServer{
 	public static ServerSocket uplinkserver;
 	public static ServerSocket downlinkserver;
 public static void main(String[] args)throws IOException{
-		int uplinkport=9901;
-		int downlinkport=9701;
+		int uplinkport=9904;
+		int downlinkport=9708;
 		try{
 			
 			uplinkserver = new ServerSocket(uplinkport);
