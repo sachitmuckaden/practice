@@ -1,4 +1,5 @@
 import java.io.*;
+import server.Values;
 import java.net.*;
 import java.util.Random;
 
@@ -18,25 +19,25 @@ class Throughput
 	
 	public static void uplinkmeasurement() throws UnknownHostException, IOException
 	{
-		String serveraddress="ruggles.gtnoise.net";
-		SocketAddress serversocket = new InetSocketAddress(serveraddress,9901);
+		String serveraddress=Values.SERVERADDRESS;
+		SocketAddress serversocket = new InetSocketAddress(serveraddress,Values.UPLINKPORT);
 		Socket uplinkclient=new Socket();
 		uplinkclient.connect(serversocket);
 		
 		DataInputStream in = new DataInputStream(uplinkclient.getInputStream());
 		DataOutputStream out = new DataOutputStream(uplinkclient.getOutputStream());
 		
-		
+		System.out.println("Starting uplink test:");
 		String buf= generateRandom();
 		byte[] message = buf.getBytes();
-		int throughput=0;
-		int tensecthroughput=0;
+		long throughput=0;
+		long tensecthroughput=0;
 		long start = System.currentTimeMillis();
 		//System.out.println(start);
 		long end = System.currentTimeMillis();
 		long intermediate = System.currentTimeMillis();
-		int count=0;
-		int tenseccount=0;
+		long count=0;
+		long tenseccount=0;
 		int flag=0;
 		do
 		{
@@ -51,8 +52,10 @@ class Throughput
 				
 			count++;
 		}while(end-start<=25000);
-		throughput=count*(message.length+(54*3))/(int)(end-start)*8;
-		tensecthroughput = tenseccount*message.length/(int)(end-intermediate)*8;
+		throughput=count*((long)message.length+(54*3))/(end-start)*8;
+		System.out.println("Message length: "+message.length);
+		System.out.println("Intermediate: "+intermediate);
+		tensecthroughput = tenseccount*((long)message.length+(54*3))/((end-intermediate)*8);
 		try{
 			Thread.sleep(2000);
 		}
@@ -63,6 +66,7 @@ class Throughput
 		//int length=0;
 		//length=in.read();
 		//System.out.println("No of packets sent: "+count);
+		System.out.println("Uplink test complete");
 		System.out.println("Overall throughput: "+throughput + "kbps");
 		System.out.println("Last 10 seconds throughput: "+tensecthroughput + "kbps");
 		//System.out.println(message.length);
@@ -73,17 +77,20 @@ class Throughput
 		//System.out.println(end);
 		out.close();
 		in.close();
+		uplinkclient.close();
 	}
 	
 	public static void downlinkmeasurement() throws IOException
 	{
-		String serveraddress="ruggles.gtnoise.net";
-		SocketAddress serversocket = new InetSocketAddress(serveraddress,9708);
+		String serveraddress=Values.SERVERADDRESS;
+		SocketAddress serversocket = new InetSocketAddress(serveraddress,Values.DOWNLINKPORT);
 		Socket downlinkclient=new Socket();
 		downlinkclient.connect(serversocket);
 		
 		DataInputStream in = new DataInputStream(downlinkclient.getInputStream());
 		DataOutputStream out = new DataOutputStream(downlinkclient.getOutputStream());
+		System.out.println("Starting downlink test:");
+		
 		String initiate="start";
 		
 		out.writeBytes(initiate);
@@ -111,7 +118,8 @@ class Throughput
 			end=System.currentTimeMillis();
 		}while(true);
 		
-		if(end-start>0) System.out.println(totalbytes*8/(int)(end-start)+ " kbps");
+		System.out.println("Downlink test complete");
+		if(end-start>0) System.out.println("Throughput: "+ totalbytes*8/(int)(end-start)+ " kbps");
 		out.close();
 		in.close();
 		downlinkclient.close();
@@ -120,9 +128,9 @@ class Throughput
 	
 	public static void main(String[] args) throws UnknownHostException, IOException
 	{
-		downlinkmeasurement();
-		uplinkmeasurement();
 		
+		uplinkmeasurement();
+		downlinkmeasurement();
 	}
 
 }
