@@ -91,11 +91,6 @@ class Throughput
 		DataOutputStream out = new DataOutputStream(downlinkclient.getOutputStream());
 		System.out.println("Starting downlink test:");
 
-		String initiate="start";
-		out.flush();
-		
-		out.writeUTF(initiate);
-		
 		out.flush();
 		try {
 			Thread.sleep(1000);
@@ -121,6 +116,7 @@ class Throughput
 		}while(true);
 
 		System.out.println("Downlink test complete");
+		System.out.println("Packets received " + count);
 		if(end-start>0) System.out.println("Throughput: "+ totalbytes*8/(int)(end-start)+ " kbps");
 		out.close();
 		in.close();

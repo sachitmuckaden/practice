@@ -14,16 +14,16 @@ public class DownlinkServer extends Thread{
 	public Socket client;
 	public int port;
 	public String ip_address;
-	
+
 	public void setSocket(Socket client){
 		this.client = client;
 		ip_address = client.getInetAddress().toString().substring(1) + ":" + client.getPort();
 	}
-	
+
 	public DownlinkServer(int port){
 		this.port=port;
 	}
-	
+
 	public static String generateRandom()
 	{
 		Random number=new Random();
@@ -36,7 +36,7 @@ public class DownlinkServer extends Thread{
 	}
 
 	public void run(){
-		
+
 		InputStreamReader in = null;
 		OutputStreamWriter out = null;
 		try{
@@ -44,67 +44,51 @@ public class DownlinkServer extends Thread{
 			in = new InputStreamReader(client.getInputStream());
 			out = new OutputStreamWriter(client.getOutputStream());
 			char buffer[] = new char[20480];
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			int bytes_read = in.read(buffer);
-			StringBuilder startmessage = new StringBuilder("");
-			startmessage.append(buffer, 0, bytes_read);
-			String initiate = startmessage.toString();
-			
-			
-			if (initiate.equals("start")){	
-				print("starting downlink:");
-				long start = System.currentTimeMillis();
-				long end = System.currentTimeMillis();
-				int packets = 0;
-				int batch = 0;
+		
+		
 
-				while(end - start < 20000){
+			print("starting downlink:");
+			long start = System.currentTimeMillis();
+			long end = System.currentTimeMillis();
+			int packets = 0;
+			int batch = 0;
 
-					
-					out.write(generateRandom());
-					packets++;
-					out.flush();
-					batch++;
-					if(batch % 50 == 0){
-						end = System.currentTimeMillis();
-					}
+			while(end - start < 20000){
+
+
+				out.write(generateRandom());
+				packets++;
+				out.flush();
+				batch++;
+				if(batch % 50 == 0){
+					end = System.currentTimeMillis();
 				}
-				print("ended, packets sent: " + packets);
+			}
+			print("ended, packets sent: " + packets);
 
-			}
-			else{
-				print("initiate failed! message: " + initiate);
-			}
 			in.close();
 			out.close();
 			client.close();
 
-			
-
 		} catch (IOException e) {
 			e.printStackTrace();
 			try{
-			in.close();
-			out.close();
+				in.close();
+				out.close();
 			}
 			catch(IOException e3)
 			{
-				
+
 			}
 			print("error");
 
 		}
 	}
-	
+
 	public void print(String s){
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
-		
+
 		System.out.println(dateFormat.format(date) + "\t" + this.ip_address + "\t:\t" + s);
 	}
 
