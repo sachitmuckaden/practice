@@ -12,7 +12,7 @@ public class DownlinkStarter extends BaseServer{
 		int port  = Values.DOWNLINKPORT;
 		while(true)
 			{
-				
+			System.out.println("DOWNLINK SERVER starting on port " + Values.DOWNLINKPORT);
 				DownlinkStarter downstart=new DownlinkStarter();
 				downstart.listen(port);
 						

@@ -38,6 +38,7 @@ public class BaseServer{
 			case (Values.DOWNLINKPORT):
 				try{	
 					DownlinkServer c = new DownlinkServer(port);
+					System.out.println("incoming connection to downlink");
 					c.setSocket(server.accept());
 					c.start();
 					break;
@@ -53,6 +54,7 @@ public class BaseServer{
 				try{
 
 					UplinkServer s = new UplinkServer(port);
+					System.out.println("incoming connection to uplink");
 					s.setSocket(server.accept());
 					s.start();
 					break;
