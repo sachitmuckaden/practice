@@ -12,7 +12,7 @@ public class UplinkStarter extends BaseServer{
 		int port  = Values.UPLINKPORT;
 		while(true)
 			{
-				
+				System.out.println("UPLINK SERVER starting on port " + Values.UPLINKPORT);
 				UplinkStarter upstart=new UplinkStarter();
 				upstart.listen(port);
 						
