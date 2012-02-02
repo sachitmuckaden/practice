@@ -44,7 +44,12 @@ public class DownlinkServer extends Thread{
 			in = new InputStreamReader(client.getInputStream());
 			out = new OutputStreamWriter(client.getOutputStream());
 			char buffer[] = new char[20480];
-			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			int bytes_read = in.read(buffer);
 			StringBuilder startmessage = new StringBuilder("");
 			startmessage.append(buffer, 0, bytes_read);

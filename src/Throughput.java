@@ -97,7 +97,12 @@ class Throughput
 		out.writeUTF(initiate);
 		
 		out.flush();
-		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		int messagebytes=0;
 		int totalbytes=0;
 		int count=0;
