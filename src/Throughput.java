@@ -5,7 +5,7 @@ import java.util.Random;
 
 class Throughput
 {
-	
+
 	public static String generateRandom()
 	{
 		Random number=new Random();
@@ -16,17 +16,17 @@ class Throughput
 		}
 		return message.toString();
 	}
-	
+
 	public static void uplinkmeasurement() throws UnknownHostException, IOException
 	{
 		String serveraddress=Values.SERVERADDRESS;
 		SocketAddress serversocket = new InetSocketAddress(serveraddress,Values.UPLINKPORT);
 		Socket uplinkclient=new Socket();
 		uplinkclient.connect(serversocket);
-		
+
 		DataInputStream in = new DataInputStream(uplinkclient.getInputStream());
 		DataOutputStream out = new DataOutputStream(uplinkclient.getOutputStream());
-		
+
 		System.out.println("Starting uplink test:");
 		String buf= generateRandom();
 		byte[] message = buf.getBytes();
@@ -49,7 +49,7 @@ class Throughput
 				}
 				tenseccount++;
 			}
-				
+
 			count++;
 		}while(end-start<=25000);
 		throughput=count*((long)message.length+(54*3))/(end-start)*8;
@@ -70,7 +70,7 @@ class Throughput
 		System.out.println("Overall throughput: "+throughput + "kbps");
 		System.out.println("Last 10 seconds throughput: "+tensecthroughput + "kbps");
 		//System.out.println(message.length);
-		
+
 		//throughput=count*length/(int)(end-start)*8;
 		//System.out.println(throughput + "kbps");
 		//System.out.println("Last 10 seconds: "+tensecthroughput+ " kbps");
@@ -79,28 +79,25 @@ class Throughput
 		in.close();
 		uplinkclient.close();
 	}
-	
+
 	public static void downlinkmeasurement() throws IOException
 	{
 		String serveraddress=Values.SERVERADDRESS;
 		SocketAddress serversocket = new InetSocketAddress(serveraddress,Values.DOWNLINKPORT);
 		Socket downlinkclient=new Socket();
 		downlinkclient.connect(serversocket);
-		
+
 		DataInputStream in = new DataInputStream(downlinkclient.getInputStream());
 		DataOutputStream out = new DataOutputStream(downlinkclient.getOutputStream());
 		System.out.println("Starting downlink test:");
-		
+
 		String initiate="start";
-		
-		out.writeBytes(initiate);
 		out.flush();
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		out.writeUTF(initiate);
+		
+		out.flush();
+		
 		int messagebytes=0;
 		int totalbytes=0;
 		int count=0;
@@ -117,19 +114,19 @@ class Throughput
 			totalbytes+=messagebytes;
 			end=System.currentTimeMillis();
 		}while(true);
-		
+
 		System.out.println("Downlink test complete");
 		if(end-start>0) System.out.println("Throughput: "+ totalbytes*8/(int)(end-start)+ " kbps");
 		out.close();
 		in.close();
 		downlinkclient.close();
 	}
-	
-	
+
+
 	public static void main(String[] args) throws UnknownHostException, IOException
 	{
-		
-		uplinkmeasurement();
+
+		//uplinkmeasurement();
 		downlinkmeasurement();
 	}
 
