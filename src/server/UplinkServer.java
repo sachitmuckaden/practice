@@ -6,17 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UplinkServer extends Thread{
-	ServerSocket myServer;
-	Socket client;
+	//ServerSocket myServer;
+	public Socket client;
 	String ip_address;
-	UplinkServer(int port){
-		try {
-			myServer = new ServerSocket(port);
-		}
-		catch (IOException e) {
-			System.out.println(e);
-		}
+	public int port;
+	
+	public UplinkServer(int port){
+		this.port=port;
 	}
+	
 	public void setSocket(Socket client){
 		this.client = client;
 		ip_address = client.getInetAddress().toString().substring(1) + ":" + client.getPort();
@@ -51,6 +49,7 @@ public class UplinkServer extends Thread{
 			try{
 				is.close();
 				os.close();
+				client.close();
 			}
 			catch(IOException e3){}
 			System.out.println(e);

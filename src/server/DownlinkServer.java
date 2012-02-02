@@ -14,13 +14,16 @@ public class DownlinkServer extends Thread{
 	public Socket client;
 	public int port;
 	public String ip_address;
+	
 	public void setSocket(Socket client){
 		this.client = client;
 		ip_address = client.getInetAddress().toString().substring(1) + ":" + client.getPort();
 	}
-	DownlinkServer(int port){
+	
+	public DownlinkServer(int port){
 		this.port=port;
 	}
+	
 	public static String generateRandom()
 	{
 		Random number=new Random();
