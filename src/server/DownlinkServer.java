@@ -1,4 +1,4 @@
-package server;
+package src.server;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -47,7 +47,7 @@ public class DownlinkServer extends Thread{
 		
 		
 
-			print("starting downlink:");
+			print("Downlink started");
 			long start = System.currentTimeMillis();
 			long end = System.currentTimeMillis();
 			int packets = 0;
@@ -64,7 +64,7 @@ public class DownlinkServer extends Thread{
 					end = System.currentTimeMillis();
 				}
 			}
-			print("ended, packets sent: " + packets);
+			print("Downlink ended, packets sent: " + packets);
 
 			in.close();
 			out.close();

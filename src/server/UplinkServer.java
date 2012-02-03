@@ -1,4 +1,4 @@
-package server;
+package src.server;
 import java.io.*;
 import java.net.*;
 import java.text.DateFormat;
@@ -32,14 +32,15 @@ public class UplinkServer extends Thread{
 			is = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			os = new PrintStream(client.getOutputStream());
 
+			print("Uplink started");
 			char[] receivemessage=new char[30000];
 			while((is.read(receivemessage))>-1){
 
 			}
 			//os.write(receivemessage.length);
 			//os.flush();
-			System.out.println("GOT IT");
-			print("Ended");
+			//System.out.println("GOT IT");
+			print("Uplink ended");
 			is.close();
 			os.close();
 			client.close();
