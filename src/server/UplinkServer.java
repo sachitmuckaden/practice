@@ -51,8 +51,11 @@ public class UplinkServer extends Thread{
 				is.close();
 				os.close();
 				client.close();
+				print("Error while receiving upload. Error code 1.");
 			}
-			catch(IOException e3){}
+			catch(IOException e3){
+				print("Error code 2.");
+			}
 			System.out.println(e);
 		}
 	}
@@ -61,7 +64,15 @@ public class UplinkServer extends Thread{
 	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
-
-		System.out.println(dateFormat.format(date) + "\t" + this.ip_address + "\t:\t" + s);
+		try{
+			FileWriter fstream = new FileWriter(Values.UPLINKFILENAME);
+			BufferedWriter of = new BufferedWriter(fstream);
+			of.write(dateFormat.format(date) + "\t" + this.ip_address + "\t:\t" + s);
+			of.close();
+		}
+		catch (Exception e){
+			System.out.println("Error while writing to file: \t" +Values.UPLINKFILENAME+"\t"+ e);
+		}
+		
 	}
 }

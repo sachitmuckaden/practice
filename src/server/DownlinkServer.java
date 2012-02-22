@@ -1,4 +1,6 @@
 package src.server;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -14,6 +16,7 @@ public class DownlinkServer extends Thread{
 	public Socket client;
 	public int port;
 	public String ip_address;
+	
 
 	public void setSocket(Socket client){
 		this.client = client;
@@ -73,14 +76,15 @@ public class DownlinkServer extends Thread{
 		} catch (IOException e) {
 			e.printStackTrace();
 			try{
+				print("Error while sending download packets. Error code 1");
 				in.close();
 				out.close();
 			}
 			catch(IOException e3)
 			{
-
+				print("Error code 2.");
 			}
-			print("error");
+			
 
 		}
 	}
@@ -88,7 +92,16 @@ public class DownlinkServer extends Thread{
 	public void print(String s){
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
-
+		try{
+			
+			FileWriter fstream = new FileWriter(Values.DOWNLINKFILENAME);
+			BufferedWriter of = new BufferedWriter(fstream);
+			of.write(dateFormat.format(date) + "\t" + this.ip_address + "\t:\t" + s);
+			of.close();
+		}
+		catch(Exception e3){
+			System.out.println("Error during write to file: \t"+Values.DOWNLINKFILENAME+"\t "+e3);
+		}
 		System.out.println(dateFormat.format(date) + "\t" + this.ip_address + "\t:\t" + s);
 	}
 
