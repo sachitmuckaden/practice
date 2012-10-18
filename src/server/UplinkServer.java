@@ -1,4 +1,4 @@
-package src.server;
+package server;
 import java.io.*;
 import java.net.*;
 import java.text.DateFormat;
@@ -23,21 +23,41 @@ public class UplinkServer extends Thread{
 	public void run() {
 		//ServerSocket myServer = null;
 		BufferedReader is=null;
-		PrintStream os=null;
+		PrintWriter os=null;
 
 
 		try {
 			//while(true){
 			//clientSocket = myServer.accept();
 			is = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			os = new PrintStream(client.getOutputStream());
+			os = new PrintWriter(client.getOutputStream(), true);
 
-			print("Uplink started");
-			char[] receivemessage=new char[30000];
-			while((is.read(receivemessage))>-1){
-
+			System.out.println("Uplink started");
+			String message = "";
+			String receivemessage= null;
+			long start_time=0, end_time = 0;
+			int count = 0;
+			int flag = 0;
+			
+			while(!(receivemessage = is.readLine()).equals("end")){
+				if(flag==0)
+				{
+					start_time = System.currentTimeMillis();
+					flag = 1;
+				}
+				message+=receivemessage;
+				end_time = System.currentTimeMillis();
+				//count++;
+				//receivemessage = is.readLine();
+				//end_time = System.currentTimeMillis();
 			}
-			//os.write(receivemessage.length);
+			end_time=System.currentTimeMillis(); 
+			byte[] array = message.getBytes();
+			int total = array.length;
+			long time = end_time-start_time; 
+			System.out.println("Sending details "+ time + " " + total + " " + count + " " + message.length());
+			os.println(total);
+			os.println(time);
 			//os.flush();
 			//System.out.println("GOT IT");
 			print("Uplink ended");
